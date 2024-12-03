@@ -24,34 +24,53 @@
 
 功能：
 
-	1、支持单发、群发、聊天室及系统功能。
-	2、以及数据持久化。
-	3、支持失败消息的持久化及重发功能。
+   1. 支持自定义请求类型。
+   2. 支持单发、群发、聊天室及系统功能。
+   3. 以及数据持久化。
+   4. 支持失败消息的持久化及重发功能。
 
 ### 软件架构
 
 Maven + SpringBoot + Hutool + Netty
 
+### 通信协议
+
+|  名称  |  长度   |
+|:----:|:-----:|
+| 协议版本 | 1byte |
+| 请求类型 | 1byte |
+| 内容长度 | 4byte |
+|  内容  |   *   |
+
 ### 快速上手
 
-   ```xml
-   <dependency>
-       <groupId>io.github.zwzrt</groupId>
-       <artifactId>message-plus</artifactId>
-       <version>0.2.2-beta</version>
-   </dependency>
-   ```
-前往 [学习文档](https://www.red-coral.cn/nav)
+1、在启动类加上@EnableMessagePlusCore注解即可启动消息增强器核心：
+
+使用Java代码连接可以查看test下的ClientTest，其它语言的连接方式请自行查询。
+
+2、如何创建自己的请求类：
+
+以自带的ChatRequest请求类为例，首先需要添加@MessagePlusRequest注解（同时需要该类被Bean容器扫描到），然后继承MessageRequest抽象类并实现其抽象方法（自定义请求类型字节码需要大于等于100）。
+
+```java
+@MessagePlusRequest
+public class ChatRequest extends MessageRequest {
+    String content;
+
+    public ChatRequest() {}
+    public ChatRequest(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public byte getType() {
+        return 1;
+    }
+}
+```
+
+注意：请求类必须存在无参构造方法。
 
 ### 使用说明
 
-1.  如果你想要测试一下，可以去我的仓库中的message-plus-test拉取代码来测试。(https://github.com/zwzrt/message-plus-test.git、 https://gitee.com/modmb/message-plus-test.git)
-2.  如果使用过程出现bug或者存在不足，可以向red_coral20240606@163.com发送邮箱，我们将会积极修复并提供更强大的功能。
-
-### 贡献者
-
-感谢以下贡献者所做的一切贡献！
-
-<a title="mo" href="https://gitee.com/modmb"><img src="https://foruda.gitee.com/avatar/1720421931102111157/11861406_modmb_1720421931.png!avatar70" alt="11861406 modmb 1720421931"></a>
-<a title="墨桑" href="https://gitee.com/MS_mos"><img src="https://foruda.gitee.com/avatar/1722943436086411647/10922893_ms_mos_1722943436.png!avatar70" alt="10922893 ms mos 1722943436"></a>
-<a title="w_m" href="https://gitee.com/Tyrannosaurus_warriors"><img src="https://foruda.gitee.com/avatar/1724938967562580050/12890918_tyrannosaurus_warriors_1724938967.png!avatar70" alt="w_m-Tyrannosaurus_warriors"></a>
+1. 如果使用过程出现bug或者存在不足，可以向red_coral20240606@163.com发送邮箱，我们将会积极修复并提供更强大的功能。

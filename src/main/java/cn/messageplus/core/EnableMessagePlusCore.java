@@ -16,4 +16,5 @@ import java.lang.annotation.*;
 @ComponentScan("cn.messageplus.core.request")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnableMessagePlusCore {
+    MessagePlusAgreement value() default MessagePlusAgreement.MPCA;
 }

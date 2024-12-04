@@ -18,6 +18,6 @@ public class ChatRequest extends MessageRequest {
 
     @Override
     public byte getType() {
-        return 1;
+        return 2;
     }
 }

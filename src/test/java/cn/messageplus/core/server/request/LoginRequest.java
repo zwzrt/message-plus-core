@@ -19,7 +19,7 @@ public class LoginRequest extends MessageRequest {
     String password;
 
     @Override
-    public byte getType() {
+    public short getType() {
         return 100;
     }
 }

@@ -17,7 +17,7 @@ public class ChatRequest extends MessageRequest {
     }
 
     @Override
-    public byte getType() {
+    public short getType() {
         return 2;
     }
 }

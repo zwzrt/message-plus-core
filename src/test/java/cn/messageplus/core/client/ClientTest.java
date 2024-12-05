@@ -2,6 +2,7 @@ package cn.messageplus.core.client;
 
 import cn.messageplus.core.MessageCodec;
 import cn.messageplus.core.request.ChatRequest;
+import cn.messageplus.core.request.PathRequest;
 import cn.messageplus.core.server.request.LoginRequest;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -31,8 +32,10 @@ public class ClientTest {
                         public void channelActive(ChannelHandlerContext ctx) throws Exception {
 //                            ChatRequest chatRequest = new ChatRequest("hello");
 //                            ctx.writeAndFlush(chatRequest);
-                            LoginRequest loginRequest = new LoginRequest("张三", "123456");
-                            ctx.writeAndFlush(loginRequest);
+//                            LoginRequest loginRequest = new LoginRequest("张三", "123456");
+//                            ctx.writeAndFlush(loginRequest);
+                            PathRequest request = new PathRequest("/test/1");
+                            ctx.writeAndFlush(request);
                         }
 
                         @Override

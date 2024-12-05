@@ -17,5 +17,5 @@ public abstract class MessageRequest implements Serializable {
     /**
      * 自定义请求类型字节码需要大于等于100
      */
-    public abstract byte getType();
+    public abstract short getType();
 }

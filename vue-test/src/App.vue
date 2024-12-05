@@ -25,11 +25,15 @@ const websocket = new WebSocket("http://localhost:8080");
 //连接成功建立的回调方法
 websocket.onopen = function() {
   var buffer = getBuffer({
-    path: "/123"
+    path: "/test/1",
+    type: "1".charCodeAt(0)
   });
 
-
-  websocket.send(buffer);
+  // websocket.send(buffer);
+  websocket.send(JSON.stringify({
+    path: "/test/1",
+    type: 1
+  }));
 }
 </script>
 <template>

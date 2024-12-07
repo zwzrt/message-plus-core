@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * 路径请求
  **/
 @Data
+@MessagePlusRequest
 @AllArgsConstructor
 @NoArgsConstructor
 public class PathRequest extends Message {

@@ -1,6 +1,6 @@
 package cn.messageplus.core.client.handler;
 
-import cn.messageplus.core.server.response.LoginResponse;
+import cn.messageplus.core.message.response.LoginResponse;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

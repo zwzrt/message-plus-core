@@ -1,4 +1,4 @@
-package cn.messageplus.core.server.request;
+package cn.messageplus.core.message.request;
 
 import cn.messageplus.core.annotation.MessagePlusRequest;
 import cn.messageplus.core.message.Message;
@@ -15,11 +15,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequest extends Message {
+    public static final short type = 11;
     String username;
     String password;
 
     @Override
     public short getType() {
-        return 100;
+        return type;
     }
 }

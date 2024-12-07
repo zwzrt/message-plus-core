@@ -1,4 +1,4 @@
-package cn.messageplus.core.server.response;
+package cn.messageplus.core.message.response;
 
 import cn.messageplus.core.annotation.MessagePlusResponse;
 import cn.messageplus.core.message.Message;
@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 @MessagePlusResponse
 public class LoginResponse extends Message {
+    public static final short type = 21;
     private boolean success;
 
     public LoginResponse() {}
@@ -20,6 +21,6 @@ public class LoginResponse extends Message {
 
     @Override
     public short getType() {
-        return 200;
+        return type;
     }
 }

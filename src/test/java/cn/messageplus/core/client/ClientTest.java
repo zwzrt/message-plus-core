@@ -3,11 +3,10 @@ package cn.messageplus.core.client;
 import cn.messageplus.core.MessageCodec;
 import cn.messageplus.core.client.handler.PathResponseHandler;
 import cn.messageplus.core.message.MessageFactory;
+import cn.messageplus.core.message.request.LoginRequest;
 import cn.messageplus.core.message.request.PathRequest;
 import cn.messageplus.core.client.handler.LoginResponseHandler;
-import cn.messageplus.core.message.response.PathResponse;
-import cn.messageplus.core.server.request.LoginRequest;
-import cn.messageplus.core.server.response.LoginResponse;
+import cn.messageplus.core.message.response.LoginResponse;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -47,7 +46,7 @@ public class ClientTest {
 
     public static void main(String[] args) {
         // 1.初始化
-        MessageFactory.addMessageType((short) 200, LoginResponse.class);
+        MessageFactory.clientStaticInit();
         // 2.启动
         NioEventLoopGroup group = new NioEventLoopGroup();
         MessageCodec MESSAGE_CODEC = new MessageCodec();
@@ -69,11 +68,12 @@ public class ClientTest {
 
                             PathRequest request1 = new PathRequest("/test/1");
                             ctx.writeAndFlush(request1);
-//                            Thread.sleep(20);
+
+
+                            login(ctx);
+
                             PathRequest request2 = new PathRequest("/test/2", new Object[]{"哈哈哈"});
                             ctx.writeAndFlush(request2);
-
-//                            login(ctx);
                         }
                         @Override
                         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {

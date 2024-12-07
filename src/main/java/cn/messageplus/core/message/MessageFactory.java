@@ -1,6 +1,8 @@
 package cn.messageplus.core.message;
 
+import cn.messageplus.core.message.request.LoginRequest;
 import cn.messageplus.core.message.request.PathRequest;
+import cn.messageplus.core.message.response.LoginResponse;
 import cn.messageplus.core.message.response.PathResponse;
 
 import java.util.HashMap;
@@ -13,13 +15,6 @@ import java.util.Map;
 public class MessageFactory {
     // 存储请求类型及请求类型的代码
     public static Map<Short, Class<? extends Message>> messageClasses = new HashMap<>();
-
-    static {
-        MessageFactory.addMessageType(PathRequest.type, PathRequest.class);
-
-        MessageFactory.addMessageType(PathResponse.type, PathResponse.class);
-    }
-
 
     /**
      * 添加请求类型
@@ -44,6 +39,17 @@ public class MessageFactory {
 
     public static Class<? extends Message> getMessageType(short type) {
         return messageClasses.get(type);
+    }
+
+    /**
+     * 用于Java客户端初始化原始消息类型
+     */
+    public static void clientStaticInit() {
+        MessageFactory.addMessageType(PathRequest.type, PathRequest.class);
+        MessageFactory.addMessageType(LoginRequest.type, LoginRequest.class);
+
+        MessageFactory.addMessageType(PathResponse.type, PathResponse.class);
+        MessageFactory.addMessageType(LoginResponse.type, LoginResponse.class);
     }
 
 }

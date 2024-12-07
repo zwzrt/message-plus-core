@@ -8,6 +8,7 @@ import lombok.Data;
  * 聊天请求
  */
 @Data
+@MessagePlusRequest
 public class ChatRequest extends Message {
     public static final short type = 2;
     String content;

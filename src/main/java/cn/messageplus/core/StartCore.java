@@ -4,6 +4,7 @@ import cn.messageplus.core.annotation.MessagePlusHandler;
 import cn.messageplus.core.annotation.MessagePlusMapping;
 import cn.messageplus.core.annotation.MessagePlusRequest;
 import cn.messageplus.core.annotation.MessagePlusResponse;
+import cn.messageplus.core.handler.LoginRequestHandler;
 import cn.messageplus.core.handler.MessageHandler;
 import cn.messageplus.core.handler.PathRequestHandler;
 import cn.messageplus.core.message.Message;
@@ -84,6 +85,8 @@ public class StartCore {
             }
 
             // 5.启动网络服务
+            MessageHandler MESSAGE_HANDLER = new MessageHandler();
+            PathRequestHandler PATH_REQUEST_HANDLER = new PathRequestHandler();
             try {
                 serverBootstrap.channel(NioServerSocketChannel.class);
                 serverBootstrap.group(boss, worker);
@@ -98,7 +101,9 @@ public class StartCore {
                                 configureByWEBSOCKET(ch);
                                 break;
                         }
-                        ch.pipeline().addLast(new PathRequestHandler());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageHandler());
+                        ch.pipeline().addLast(PATH_REQUEST_HANDLER);
                         // 添加自定义处理器
                         for (SimpleChannelInboundHandler<?> handler : handlerList) {
                             ch.pipeline().addLast(handler);
@@ -120,10 +125,8 @@ public class StartCore {
 
     private static void configureByMPCA(SocketChannel ch) {
         MessageCodec MESSAGE_CODEC = new MessageCodec();
-        MessageHandler MESSAGE_HANDLER = new MessageHandler();
 
         ch.pipeline().addLast(MESSAGE_CODEC);
-        ch.pipeline().addLast(MESSAGE_HANDLER);
     }
     private static void configureByWEBSOCKET(SocketChannel ch) {
         ch.pipeline().addLast(new HttpServerCodec());

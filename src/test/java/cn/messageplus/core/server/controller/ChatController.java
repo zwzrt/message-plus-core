@@ -13,7 +13,8 @@ public class ChatController {
         System.out.println("/test/1");
     }
     @MessagePlusMapping("/2")
-    public void test2() {
-        System.out.println("/test/2");
+    public String test2(String msg) {
+        System.out.println("/test/2：" + msg);
+        return msg;
     }
 }

@@ -1,7 +1,7 @@
 package cn.messageplus.core.server.request;
 
 import cn.messageplus.core.annotation.MessagePlusRequest;
-import cn.messageplus.core.request.MessageRequest;
+import cn.messageplus.core.message.Message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @MessagePlusRequest
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest extends MessageRequest {
+public class LoginRequest extends Message {
     String username;
     String password;
 

@@ -8,10 +8,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 请求注解
- */
+ * 消息响应注解
+ **/
 @Component
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MessagePlusRequest {
+public @interface MessagePlusResponse {
 }

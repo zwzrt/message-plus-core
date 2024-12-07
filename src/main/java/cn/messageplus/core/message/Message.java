@@ -1,13 +1,11 @@
-package cn.messageplus.core.request;
-
-import lombok.Data;
+package cn.messageplus.core.message;
 
 import java.io.Serializable;
 
 /**
  * 请求类型抽象类
  **/
-public abstract class MessageRequest implements Serializable {
+public abstract class Message implements Serializable {
     private final byte version = 1;
 
     public byte getVersion() {

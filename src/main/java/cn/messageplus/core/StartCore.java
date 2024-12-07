@@ -1,12 +1,13 @@
 package cn.messageplus.core;
 
+import cn.messageplus.core.annotation.MessagePlusHandler;
 import cn.messageplus.core.annotation.MessagePlusMapping;
 import cn.messageplus.core.annotation.MessagePlusRequest;
+import cn.messageplus.core.annotation.MessagePlusResponse;
 import cn.messageplus.core.handler.MessageHandler;
 import cn.messageplus.core.handler.PathRequestHandler;
-import cn.messageplus.core.request.MessageRequest;
-import cn.messageplus.core.request.PathRequest;
-import cn.messageplus.core.request.RequestFactory;
+import cn.messageplus.core.message.Message;
+import cn.messageplus.core.message.MessageFactory;
 import cn.messageplus.core.utils.exterior.SpringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -19,7 +20,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.MessageToByteEncoder;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
@@ -29,10 +29,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,10 +60,15 @@ public class StartCore {
             MessagePlusAgreement value = application.getClass().getAnnotation(EnableMessagePlusCore.class).value();
 
             // 2.初始化请求类型
-            List<MessageRequest> requestList = SpringUtils.getBeansWithAnnotation(MessagePlusRequest.class).stream().map((o) -> (MessageRequest) o).collect(Collectors.toList());
-            RequestFactory.addRequestType(requestList);
+            List<Message> requestList = SpringUtils.getBeansWithAnnotation(MessagePlusRequest.class).stream().map((o) -> (Message) o).collect(Collectors.toList());
+            MessageFactory.addMessageTypes(requestList);
+            List<Message> responseList = SpringUtils.getBeansWithAnnotation(MessagePlusResponse.class).stream().map((o) -> (Message) o).collect(Collectors.toList());
+            MessageFactory.addMessageTypes(responseList);
 
-            // 3.初始化业务层(Controller)
+            // 3.初始化请求处理器
+            List<SimpleChannelInboundHandler<?>> handlerList = SpringUtils.getBeansWithAnnotation(MessagePlusHandler.class).stream().map((o) -> (SimpleChannelInboundHandler<?>) o).collect(Collectors.toList());
+
+            // 4.初始化业务层(Controller)
             List<Object> beansWithMessagePlusMapping = SpringUtils.getBeansWithAnnotation(MessagePlusMapping.class);
             for (Object bean : beansWithMessagePlusMapping) {
                 String path1 = bean.getClass().getAnnotation(MessagePlusMapping.class).value();
@@ -81,7 +83,7 @@ public class StartCore {
                 }
             }
 
-            // 4.启动网络服务
+            // 5.启动网络服务
             try {
                 serverBootstrap.channel(NioServerSocketChannel.class);
                 serverBootstrap.group(boss, worker);
@@ -97,6 +99,10 @@ public class StartCore {
                                 break;
                         }
                         ch.pipeline().addLast(new PathRequestHandler());
+                        // 添加自定义处理器
+                        for (SimpleChannelInboundHandler<?> handler : handlerList) {
+                            ch.pipeline().addLast(handler);
+                        }
                     }
                 });
                 ChannelFuture channelFuture = serverBootstrap.bind(8080).sync();
@@ -118,15 +124,14 @@ public class StartCore {
 
         ch.pipeline().addLast(MESSAGE_CODEC);
         ch.pipeline().addLast(MESSAGE_HANDLER);
-        ch.pipeline().addLast(new PathRequestHandler());
     }
     private static void configureByWEBSOCKET(SocketChannel ch) {
         ch.pipeline().addLast(new HttpServerCodec());
         ch.pipeline().addLast(new HttpObjectAggregator(65536));
         ch.pipeline().addLast(new WebSocketServerProtocolHandler("/"));
-        ch.pipeline().addLast(new MessageToMessageCodec<BinaryWebSocketFrame, MessageRequest>() {
+        ch.pipeline().addLast(new MessageToMessageCodec<BinaryWebSocketFrame, Message>() {
             @Override
-            protected void encode(ChannelHandlerContext ctx, MessageRequest msg, List<Object> out) throws Exception {
+            protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> out) throws Exception {
             }
 
             @Override
@@ -136,20 +141,20 @@ public class StartCore {
                 byte[] bytes = new byte[content.readableBytes() - 1];
                 content.readBytes(bytes);
 
-                Class<? extends MessageRequest> requestType = RequestFactory.getRequestType(type);
-                MessageRequest messageRequest = JSON.parseObject(new String(bytes), RequestFactory.getRequestType(type));
+                Class<? extends Message> requestType = MessageFactory.getMessageType(type);
+                Message messageRequest = JSON.parseObject(new String(bytes), MessageFactory.getMessageType(type));
                 out.add(messageRequest);
             }
         });
-        ch.pipeline().addLast(new MessageToMessageCodec<TextWebSocketFrame, MessageRequest>() {
+        ch.pipeline().addLast(new MessageToMessageCodec<TextWebSocketFrame, Message>() {
             @Override
-            protected void encode(ChannelHandlerContext ctx, MessageRequest msg, List<Object> out) throws Exception {
+            protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> out) throws Exception {
             }
 
             @Override
             protected void decode(ChannelHandlerContext ctx, TextWebSocketFrame frame, List<Object> out) throws Exception {
                 JSONObject jsonObject = JSON.parseObject(frame.text());
-                MessageRequest messageRequest = jsonObject.toJavaObject(RequestFactory.getRequestType(Short.parseShort(jsonObject.getString("type"))));
+                Message messageRequest = jsonObject.toJavaObject(MessageFactory.getMessageType(Short.parseShort(jsonObject.getString("type"))));
 
                 out.add(messageRequest);
             }

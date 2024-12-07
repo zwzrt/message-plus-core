@@ -2,8 +2,6 @@ package cn.messageplus.core.server;
 
 import cn.messageplus.core.MessagePlusAgreement;
 import cn.messageplus.core.EnableMessagePlusCore;
-import cn.messageplus.core.request.PathRequest;
-import com.alibaba.fastjson2.JSON;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,7 +12,7 @@ import java.io.IOException;
 /**
  * 服务端
  **/
-@EnableMessagePlusCore(MessagePlusAgreement.WEB_SOCKET)
+@EnableMessagePlusCore(MessagePlusAgreement.MPCA)
 @SpringBootApplication()
 @Import(Config.class)
 public class ApplicationTest {

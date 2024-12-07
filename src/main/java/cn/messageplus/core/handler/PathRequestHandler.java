@@ -1,8 +1,8 @@
 package cn.messageplus.core.handler;
 
 import cn.messageplus.core.StartCore;
-import cn.messageplus.core.request.MessageRequest;
-import cn.messageplus.core.request.PathRequest;
+import cn.messageplus.core.message.request.PathRequest;
+import cn.messageplus.core.message.response.PathResponse;
 import cn.messageplus.core.utils.exterior.SpringUtils;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -29,6 +29,9 @@ public class PathRequestHandler extends SimpleChannelInboundHandler<PathRequest>
         // 3.获取到实体类
         Object mapping = SpringUtils.getBean(clazz);
         // 4.执行对应方法
-        method.invoke(mapping);
+        Object invoke = method.invoke(mapping, request.getArgs());
+        if (invoke != null) {
+            channelHandlerContext.writeAndFlush(new PathResponse(invoke));
+        }
     }
 }

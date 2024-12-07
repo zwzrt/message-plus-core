@@ -13,7 +13,7 @@ import java.lang.annotation.*;
         SpringUtils.class,
         StartCore.class,
 })
-@ComponentScan("cn.messageplus.core.request")
+@ComponentScan("cn.messageplus.core.message")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnableMessagePlusCore {
     MessagePlusAgreement value() default MessagePlusAgreement.MPCA;

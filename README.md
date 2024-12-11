@@ -18,7 +18,7 @@
 [//]: # (&ensp;|&ensp;)
 [//]: # (<a href="https://zwzrt.github.io/">加入我们</a>)
 
-### 介绍
+## 介绍
 
 基于netty的消息增强器核心，帮助开发者快速开发 即时聊天系统。
 
@@ -29,11 +29,13 @@
    3. 以及数据持久化。
    4. 支持失败消息的持久化及重发功能。
 
-### 软件架构
+## 软件架构
 
 Maven + SpringBoot + Hutool + Netty
 
-### 通信协议
+## 通信协议
+
+### 1.MPCA
 
 |  名称  |   类型   |  长度   |
 |:----:|:------:|:-----:|
@@ -42,7 +44,29 @@ Maven + SpringBoot + Hutool + Netty
 | 内容长度 |  int   | 4byte |
 |  内容  | string |   *   |
 
-### 快速上手
+### 2.WebSocket
+
+#### a.字符串
+
+对象的JSON字符串即可
+```json
+{
+  "type": 0
+}
+```
+
+#### b.二进制
+
+|    名称    |   类型   |  长度   |
+|:--------:|:------:|:-----:|
+|   协议版本   |  byte  | 1byte |
+|   请求类型   | short  | 2byte |
+|   内容长度   |  int   | 4byte |
+|    内容    | string |   *   |
+| 音频长度(可选) |  int   | 4byte |
+| 音频内容(可选) | byte[] |   *   |
+
+## 快速上手
 
 1、在启动类加上@EnableMessagePlusCore注解即可启动消息增强器核心：
 
@@ -71,6 +95,6 @@ public class ChatRequest extends MessageRequest {
 
 注意：请求类必须存在无参构造方法。
 
-### 使用说明
+## 使用说明
 
 1. 如果使用过程出现bug或者存在不足，可以向red_coral20240606@163.com发送邮箱，我们将会积极修复并提供更强大的功能。

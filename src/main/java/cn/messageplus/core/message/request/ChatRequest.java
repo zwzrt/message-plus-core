@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @MessagePlusRequest
 public class ChatRequest extends Message {
-    public static final short type = 2;
+    public static final short type = 1;
     String content;
 
     public ChatRequest() {}

@@ -4,14 +4,14 @@ import cn.messageplus.core.annotation.MessagePlusHandler;
 import cn.messageplus.core.annotation.MessagePlusMapping;
 import cn.messageplus.core.annotation.MessagePlusRequest;
 import cn.messageplus.core.annotation.MessagePlusResponse;
-import cn.messageplus.core.handler.LoginRequestHandler;
-import cn.messageplus.core.handler.MessageHandler;
-import cn.messageplus.core.handler.PathRequestHandler;
+import cn.messageplus.core.codec.BinaryWebSocketCodec;
+import cn.messageplus.core.codec.MessageCodec;
+import cn.messageplus.core.codec.TextWebSocketCodec;
+import cn.messageplus.core.handler.*;
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
 import cn.messageplus.core.utils.exterior.SpringUtils;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
@@ -25,7 +25,6 @@ import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -85,14 +84,18 @@ public class StartCore {
             }
 
             // 5.启动网络服务
+            ExceptionHandler EXCEPTION_HANDLER = new ExceptionHandler();
+            LoginRequestHandler LOGIN_REQUEST_HANDLER = new LoginRequestHandler();
             MessageHandler MESSAGE_HANDLER = new MessageHandler();
             PathRequestHandler PATH_REQUEST_HANDLER = new PathRequestHandler();
+            AudioHandler AUDIO_HANDLER = new AudioHandler();
             try {
                 serverBootstrap.channel(NioServerSocketChannel.class);
                 serverBootstrap.group(boss, worker);
                 serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(EXCEPTION_HANDLER);
                         switch (value) {
                             case MPCA:
                                 configureByMPCA(ch);
@@ -101,9 +104,10 @@ public class StartCore {
                                 configureByWEBSOCKET(ch);
                                 break;
                         }
-                        ch.pipeline().addLast(new LoginRequestHandler());
-                        ch.pipeline().addLast(new MessageHandler());
+                        ch.pipeline().addLast(LOGIN_REQUEST_HANDLER);
+                        ch.pipeline().addLast(MESSAGE_HANDLER);
                         ch.pipeline().addLast(PATH_REQUEST_HANDLER);
+                        ch.pipeline().addLast(AUDIO_HANDLER);
                         // 添加自定义处理器
                         for (SimpleChannelInboundHandler<?> handler : handlerList) {
                             ch.pipeline().addLast(handler);
@@ -132,35 +136,7 @@ public class StartCore {
         ch.pipeline().addLast(new HttpServerCodec());
         ch.pipeline().addLast(new HttpObjectAggregator(65536));
         ch.pipeline().addLast(new WebSocketServerProtocolHandler("/"));
-        ch.pipeline().addLast(new MessageToMessageCodec<BinaryWebSocketFrame, Message>() {
-            @Override
-            protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> out) throws Exception {
-            }
-
-            @Override
-            protected void decode(ChannelHandlerContext ctx, BinaryWebSocketFrame frame, List<Object> out) throws Exception {
-                ByteBuf content = frame.content();
-                byte type = content.readByte();
-                byte[] bytes = new byte[content.readableBytes() - 1];
-                content.readBytes(bytes);
-
-                Class<? extends Message> requestType = MessageFactory.getMessageType(type);
-                Message messageRequest = JSON.parseObject(new String(bytes), MessageFactory.getMessageType(type));
-                out.add(messageRequest);
-            }
-        });
-        ch.pipeline().addLast(new MessageToMessageCodec<TextWebSocketFrame, Message>() {
-            @Override
-            protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> out) throws Exception {
-            }
-
-            @Override
-            protected void decode(ChannelHandlerContext ctx, TextWebSocketFrame frame, List<Object> out) throws Exception {
-                JSONObject jsonObject = JSON.parseObject(frame.text());
-                Message messageRequest = jsonObject.toJavaObject(MessageFactory.getMessageType(Short.parseShort(jsonObject.getString("type"))));
-
-                out.add(messageRequest);
-            }
-        });
+        ch.pipeline().addLast(new BinaryWebSocketCodec());
+        ch.pipeline().addLast(new TextWebSocketCodec());
     }
 }

@@ -17,6 +17,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<Message> {
         // 不为空说明已登录，放行
         if (SessionManage.getUid(channelHandlerContext.channel()) != null) {
             channelHandlerContext.writeAndFlush(new LoginResponse(true));
+            // 放行
             channelHandlerContext.fireChannelRead(message);
         } else {
             channelHandlerContext.writeAndFlush(new LoginResponse(false));

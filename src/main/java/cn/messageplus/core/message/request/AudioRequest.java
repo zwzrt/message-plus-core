@@ -2,22 +2,22 @@ package cn.messageplus.core.message.request;
 
 import cn.messageplus.core.annotation.MessagePlusRequest;
 import cn.messageplus.core.message.Message;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author mo
- * @日期: 2024-12-03 23:23
+ * 音频请求
  **/
 @Data
-@MessagePlusRequest
 @NoArgsConstructor
-@AllArgsConstructor
-public class LoginRequest extends Message {
-    public static final short type = 2;
-    String username;
-    String password;
+@MessagePlusRequest
+public class AudioRequest extends Message {
+    public static final short type = 4;
+    private byte[] bytes;
+
+    public AudioRequest(byte[] bytes) {
+        this.bytes = bytes;
+    }
 
     @Override
     public short getType() {

@@ -1,4 +1,4 @@
-package cn.messageplus.core;
+package cn.messageplus.core.codec;
 
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;

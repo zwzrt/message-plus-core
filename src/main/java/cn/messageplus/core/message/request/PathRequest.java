@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PathRequest extends Message {
-    public static final short type = 10;
+    public static final short type = 3;
     // 请求路径
     String path;
     // 请求参数

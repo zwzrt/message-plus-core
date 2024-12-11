@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @MessagePlusResponse
 public class LoginResponse extends Message {
-    public static final short type = 21;
+    public static final short type = 52;
     private boolean success;
 
     public LoginResponse() {}

@@ -1,5 +1,6 @@
 package cn.messageplus.core.session;
 
+import cn.messageplus.core.message.Message;
 import io.netty.channel.Channel;
 
 import java.util.Map;
@@ -18,6 +19,12 @@ public class SessionManage {
         channelUidMap.put(channel, uid);
     }
 
+    public static void send(String toId, Message message) {
+        Channel channel = uidChannelMap.get(toId);
+        if (channel != null) {
+            channel.writeAndFlush(message);
+        }
+    }
 
     public static String getUid(Channel channel) {
         return channelUidMap.get(channel);

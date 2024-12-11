@@ -66,6 +66,14 @@ Maven + SpringBoot + Hutool + Netty
 | 音频长度(可选) |  int   | 4byte |
 | 音频内容(可选) | byte[] |   *   |
 
+## 案例项目
+
+Java服务端及客户端
+[跳转](https://gitee.com/modmb/message-plus-core-demo-java)
+
+Vue客户端
+[跳转](https://gitee.com/modmb/message-plus-core-demo-vue)
+
 ## 快速上手
 
 1、在启动类加上@EnableMessagePlusCore注解即可启动消息增强器核心：

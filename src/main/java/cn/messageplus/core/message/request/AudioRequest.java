@@ -13,6 +13,15 @@ import lombok.NoArgsConstructor;
 @MessagePlusRequest
 public class AudioRequest extends Message {
     public static final short type = 4;
+
+    // 切片ID
+    private int sliceId;
+    // 切片总数
+    private int sliceNum;
+    // 当前切片索引
+    private int currentIndex;
+    // 实际长度
+    private int length;
     private byte[] bytes;
 
     public AudioRequest(byte[] bytes) {

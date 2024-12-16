@@ -3,8 +3,10 @@ package cn.messageplus.core.codec;
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
 import cn.messageplus.core.message.request.AudioRequest;
+import cn.messageplus.core.session.SessionManage;
 import com.alibaba.fastjson.JSON;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -24,6 +26,7 @@ public class BinaryWebSocketCodec extends MessageToMessageCodec<BinaryWebSocketF
     @Override
     protected void decode(ChannelHandlerContext ctx, BinaryWebSocketFrame frame, List<Object> out) throws Exception {
         ByteBuf content = frame.content();
+
         byte version = content.readByte();
         short type = content.readShort();
         int length = content.readInt();
@@ -35,11 +38,21 @@ public class BinaryWebSocketCodec extends MessageToMessageCodec<BinaryWebSocketF
         Message messageRequest = JSON.parseObject(new String(bytes), MessageFactory.getMessageType(type));
 
         if (requestType == AudioRequest.class) {
-            int audioLength = content.readInt();
-            byte[] audioBytes = new byte[audioLength];
-            content.readBytes(audioBytes);
             AudioRequest request = (AudioRequest) messageRequest;
-            request.setBytes(audioBytes);
+            int audioLength = content.readInt();
+            request.setLength(audioLength);
+            // 一次性读不完
+            if (request.getCurrentIndex() < request.getSliceNum()) {
+                byte[] audioBytes = new byte[60000];
+                content.readBytes(audioBytes);
+                request.setBytes(audioBytes);
+            }
+            // 最后一次读取，或者一次能读完
+            else {
+                byte[] audioBytes = new byte[audioLength - ((request.getSliceNum() - 1) * 60000)];
+                content.readBytes(audioBytes);
+                request.setBytes(audioBytes);
+            }
         }
 
         out.add(messageRequest);

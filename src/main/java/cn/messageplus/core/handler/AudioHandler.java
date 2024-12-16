@@ -9,8 +9,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
-import java.util.Arrays;
-
 /**
  * 音频请求处理器
  **/
@@ -20,9 +18,6 @@ public class AudioHandler extends SimpleChannelInboundHandler<AudioRequest> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, AudioRequest msg) throws Exception {
         AudioResponse audioResponse = new AudioResponse(msg.getBytes());
-        String s = new String(msg.getBytes());
-        System.out.println(msg.getBytes().length);
-        System.out.println(s.length());
         BeanUtils.copyProperties(msg, audioResponse);
         SessionManage.send(msg.getToId(), audioResponse);
     }

@@ -17,6 +17,15 @@ import java.util.List;
 @MessagePlusResponse
 public class AudioResponse extends Message {
     public static final short type = 54;
+
+    // 切片ID
+    private int sliceId;
+    // 切片总数
+    private int sliceNum;
+    // 当前切片索引
+    private int currentIndex;
+    // 实际长度
+    private int length;
     private List<Byte> bytes;
 
     public AudioResponse(byte[] bytes) {

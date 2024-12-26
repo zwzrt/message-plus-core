@@ -20,10 +20,21 @@ public class DualMap<K, V> {
         negativeMap.put(value, key);
     }
 
+
+    /**
+     * 获取值
+     * @param key 键
+     * @return 值
+     */
     public V getV(K key) {
         return positiveMap.get(key);
     }
 
+    /**
+     * 获取键
+     * @param value 值
+     * @return 键
+     */
     public K getK(V value) {
         return negativeMap.get(value);
     }

@@ -1,11 +1,10 @@
 package cn.messageplus.core.session;
 
 import cn.messageplus.core.message.Message;
-import cn.messageplus.core.utils.DualMap;
+import cn.messageplus.core.utils.BidHashMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 
-import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,8 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * 会话管理
  **/
 public class SessionManage {
-    private static final DualMap<String, Channel> uidChannelMap = new DualMap<>();
-    private static final DualMap<String, ByteBuf> uidBufferMap = new DualMap<>();
+//    private static final DualMap<String, Channel> uidChannelMap = new DualMap<>();
+//    private static final DualMap<String, ByteBuf> uidBufferMap = new DualMap<>();
+    private static final BidHashMap<String, Channel> uidChannelMap = new BidHashMap<>();
+    public static final BidHashMap<String, ByteBuf> uidBufferMap = new BidHashMap<>();
     private static final Map<String, Integer> uidHalfPackageMap = new ConcurrentHashMap<>();
 
 

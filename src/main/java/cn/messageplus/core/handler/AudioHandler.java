@@ -17,8 +17,11 @@ import org.springframework.beans.BeanUtils;
 public class AudioHandler extends SimpleChannelInboundHandler<AudioRequest> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, AudioRequest msg) throws Exception {
+        // 1.创建响应对象
         AudioResponse audioResponse = new AudioResponse(msg.getBytes());
+        // 2.拷贝
         BeanUtils.copyProperties(msg, audioResponse);
+        // 3.响应请求
         SessionManage.send(msg.getToId(), audioResponse);
     }
 }

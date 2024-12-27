@@ -1,6 +1,7 @@
 package cn.messageplus.core.utils;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * 双向Map
@@ -38,9 +39,13 @@ public class BidHashMap<K, V> implements Serializable {
     /**
      * 容器
      */
+    // 以键的哈希值为索引
     private Node<K, V>[] keyNodes;
+    // 最后一个节点
     private Node<K, V>[] keyEndNodes;
+    // 以值的哈希值为索引
     private Node<K, V>[] valueNodes;
+    // 最后一个节点
     private Node<K, V>[] valueEndNodes;
     /**
      * 当前容器最大容量
@@ -50,6 +55,10 @@ public class BidHashMap<K, V> implements Serializable {
      * 当前容器大小
      */
     private int size = 0;
+    /**
+     * 扩容次数
+     */
+    private short expansionNum = 0;
 
 
 
@@ -71,33 +80,42 @@ public class BidHashMap<K, V> implements Serializable {
     public V put(K key, V value) {
         // 键值对已经存在，无法添加
         if (this.getV(key) != null) {
-            throw new RuntimeException("键值对已经存在");
+            throw new RuntimeException("键值对已经存在: "+this.getV(key));
         }
 
         V v = this.getV(key);
 
-        Node<K, V> n = new Node<>(key, value);
+        Node<K, V> n1 = new Node<>(key, value);
+        Node<K, V> n2 = new Node<>(key, value);
         int kIndex = this.getIndex(key);
         int vIndex = this.getIndex(value);
         if (this.keyNodes[kIndex] == null) {
-            this.keyNodes[kIndex] = n;
-            this.keyEndNodes[kIndex] = n;
+            this.keyNodes[kIndex] = n1;
+            this.keyEndNodes[kIndex] = n1;
         } else {
-            this.keyEndNodes[kIndex].next = n;
-            this.keyEndNodes[kIndex] = n;
+            this.keyEndNodes[kIndex].next = n1;
+            this.keyEndNodes[kIndex] = n1;
         }
 
         if (this.valueNodes[vIndex] == null) {
-            this.valueNodes[vIndex] = n;
-            this.valueEndNodes[vIndex] = n;
+            this.valueNodes[vIndex] = n2;
+            this.valueEndNodes[vIndex] = n2;
         } else {
-            this.valueEndNodes[vIndex].next = n;
-            this.valueEndNodes[vIndex] = n;
+            this.valueEndNodes[vIndex].next = n2;
+            this.valueEndNodes[vIndex] = n2;
         }
 
         this.size++;
 
+        // 扩容
+        if(this.size >= this.maxSize) {
+            this.expansion();
+        }
+
         return value;
+    }
+    protected V put(Node<K, V> node) {
+        return this.put(node.key, node.value);
     }
 
     /**
@@ -106,27 +124,35 @@ public class BidHashMap<K, V> implements Serializable {
      * @return 返回值
      */
     public V remove(K key) {
+        // 1.查询值
         V value = this.getV(key);
         if (value == null) return null;
+        // 2.获取索引
         int kIndex = this.getIndex(key);
         int vIndex = this.getIndex(value);
+        // 3.删除键节点
         Node<K, V> keyNode = this.keyNodes[kIndex];
         while (keyNode != null) {
             if (keyNode.key.equals(key)) {
                 if (keyNode.last == null) {
+                    // 为根节点，直接修改根节点
                     this.keyNodes[kIndex] = keyNode.next;
                 } else {
+                    // 为子节点，将上一个节点指向下一个节点
                     keyNode.last.next = keyNode.next;
                 }
             }
             keyNode = keyNode.next;
         }
+        // 4.删除值节点
         Node<K, V> valueNode = this.valueNodes[vIndex];
         while (valueNode != null) {
             if (valueNode.value.equals(value)) {
                 if (valueNode.last == null) {
+                    // 为根节点，直接修改根节点
                     this.valueNodes[vIndex] = valueNode.next;
                 } else {
+                    // 为子节点，将上一个节点指向下一个节点
                     valueNode.last.next = valueNode.next;
                 }
             }
@@ -178,6 +204,15 @@ public class BidHashMap<K, V> implements Serializable {
     public int size() {
         return this.size;
     }
+    /**
+     * 当前容器最大容量
+     */
+    public int maxSize() {
+        return this.maxSize;
+    }
+    public short getExpansionNum() {
+        return this.expansionNum;
+    }
 
     /**
      * 判空
@@ -192,8 +227,11 @@ public class BidHashMap<K, V> implements Serializable {
     public void clear() {
         this.maxSize = 32;
         this.size = 0;
+        this.expansionNum = 0;
         this.keyNodes = new Node[this.maxSize];
+        this.keyEndNodes = new Node[this.maxSize];
         this.valueNodes = new Node[this.maxSize];
+        this.valueEndNodes = new Node[this.maxSize];
     }
 
     /**
@@ -238,6 +276,10 @@ public class BidHashMap<K, V> implements Serializable {
             }
         }
         return null;
+    }
+
+    public Node<K, V>[] getKeyNodes() {
+        return this.keyNodes;
     }
 
     /**
@@ -321,15 +363,32 @@ public class BidHashMap<K, V> implements Serializable {
         }
         // 修改容量
         this.maxSize = this.maxSize * 2;
+        this.size = 0;
+        // 复制旧容器
+        Node<K, V>[] oldKeyNodes = this.keyNodes;
+        Node<K, V>[] keyEndNodes = this.keyEndNodes;
+        Node<K, V>[] valueNodes = this.valueNodes;
+        Node<K, V>[] valueEndNodes = this.valueEndNodes;
         // 创建新容器
-        Node<K, V>[] newKeyNodes = new Node[this.maxSize];
-        Node<K, V>[] newValueNodes = new Node[this.maxSize];
+        this.keyNodes = new Node[this.maxSize];
+        this.keyEndNodes = new Node[this.maxSize];
+        this.valueNodes = new Node[this.maxSize];
+        this.valueEndNodes = new Node[this.maxSize];
         // 转移数据到新容器
-        System.arraycopy(this.keyNodes, 0, newKeyNodes, 0, this.maxSize);
-        System.arraycopy(this.valueNodes, 0, newValueNodes, 0, this.maxSize);
-        // 覆盖旧容器
-        this.keyNodes = newKeyNodes;
-        this.valueNodes = newValueNodes;
+        this.foreach(oldKeyNodes, (node) -> {
+            this.put(node);
+        });
+        // 增加扩容次数
+        expansionNum++;
+    }
+
+    protected void foreach(Node<K, V>[] nodes, Consumer<Node<K, V>> consumer) {
+        for (Node<K, V> node : nodes) {
+            while (node!=null) {
+                consumer.accept(node);
+                node = node.next;
+            }
+        }
     }
 
 }

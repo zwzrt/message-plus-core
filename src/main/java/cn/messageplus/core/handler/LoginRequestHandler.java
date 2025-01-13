@@ -1,5 +1,7 @@
 package cn.messageplus.core.handler;
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.messageplus.core.message.request.LoginRequest;
 import cn.messageplus.core.message.response.LoginResponse;
 import cn.messageplus.core.session.SessionManage;
@@ -10,8 +12,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * @deprecated
  * 登录请求处理器
  **/
+@Deprecated
 @Slf4j
 @ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequest> {
@@ -31,5 +35,14 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             }
         }
         channelHandlerContext.writeAndFlush(new LoginResponse(false));
+
+//        try {
+//            String uid = StpUtil.getLoginIdAsString();
+//            // 加入会话管理
+//            SessionManage.join(uid, channelHandlerContext.channel());
+//            channelHandlerContext.writeAndFlush(new LoginResponse(true));
+//        } catch (NotLoginException e) {
+//            channelHandlerContext.writeAndFlush(new LoginResponse(false));
+//        }
     }
 }

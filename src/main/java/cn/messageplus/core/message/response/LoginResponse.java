@@ -5,9 +5,11 @@ import cn.messageplus.core.message.MessageResponse;
 import lombok.Data;
 
 /**
+ * @deprecated 
  * @author mo
  * @日期: 2024-12-07 14:50
  **/
+@Deprecated
 @Data
 @MessagePlusResponse
 public class LoginResponse extends MessageResponse {

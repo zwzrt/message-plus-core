@@ -7,9 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * @deprecated
  * @author mo
  * @日期: 2024-12-03 23:23
  **/
+@Deprecated
 @Data
 @MessagePlusRequest
 @NoArgsConstructor

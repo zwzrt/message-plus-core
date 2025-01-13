@@ -6,7 +6,7 @@
 
     <groupId>cn.messageplus.core</groupId>
     <artifactId>message-plus-core</artifactId>
-    <version>0.0.1-beta</version>
+    <version>0.0.2-beta</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -37,7 +37,15 @@
             <version>2.7.11</version>
             <optional>true</optional>
         </dependency>
+
+        <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>1.39.0</version>
+        </dependency>
     </dependencies>
+
     <repositories>
         <repository>
             <id>maven_central</id>
@@ -45,6 +53,7 @@
             <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
     </repositories>
+
     <build>
         <plugins>
             <plugin>

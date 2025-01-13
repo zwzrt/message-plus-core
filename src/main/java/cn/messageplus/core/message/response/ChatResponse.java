@@ -1,8 +1,8 @@
-package cn.messageplus.core.message.request;
+package cn.messageplus.core.message.response;
 
 import cn.messageplus.core.annotation.MessagePlusRequest;
 import cn.messageplus.core.message.Message;
-import cn.messageplus.core.message.MessageRequest;
+import cn.messageplus.core.message.MessageResponse;
 import lombok.Data;
 
 /**
@@ -10,12 +10,12 @@ import lombok.Data;
  */
 @Data
 @MessagePlusRequest
-public class ChatRequest extends MessageRequest {
-    public static final short type = 1;
+public class ChatResponse extends MessageResponse {
+    public static final short type = 51;
     String content;
 
-    public ChatRequest() {}
-    public ChatRequest(String content) {
+    public ChatResponse() {}
+    public ChatResponse(String content) {
         this.content = content;
     }
 

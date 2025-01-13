@@ -1,6 +1,7 @@
 package cn.messageplus.core.session;
 
 import cn.messageplus.core.message.Message;
+import cn.messageplus.core.message.MessageResponse;
 import cn.messageplus.core.utils.BidHashMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -25,10 +26,10 @@ public class SessionManage {
         uidBufferMap.put(uid, channel.alloc().buffer());
     }
 
-    public static void send(String toId, Message message) {
+    public static void send(String toId, MessageResponse response) {
         Channel channel = uidChannelMap.getV(toId);
         if (channel != null) {
-            channel.writeAndFlush(message);
+            channel.writeAndFlush(response);
         }
     }
 

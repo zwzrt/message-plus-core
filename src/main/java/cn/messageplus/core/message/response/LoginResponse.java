@@ -1,7 +1,7 @@
 package cn.messageplus.core.message.response;
 
 import cn.messageplus.core.annotation.MessagePlusResponse;
-import cn.messageplus.core.message.Message;
+import cn.messageplus.core.message.MessageResponse;
 import lombok.Data;
 
 /**
@@ -10,7 +10,7 @@ import lombok.Data;
  **/
 @Data
 @MessagePlusResponse
-public class LoginResponse extends Message {
+public class LoginResponse extends MessageResponse {
     public static final short type = 52;
     private boolean success;
 

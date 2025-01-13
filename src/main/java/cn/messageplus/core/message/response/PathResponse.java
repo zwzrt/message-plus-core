@@ -1,8 +1,7 @@
 package cn.messageplus.core.message.response;
 
 import cn.messageplus.core.annotation.MessagePlusRequest;
-import cn.messageplus.core.annotation.MessagePlusResponse;
-import cn.messageplus.core.message.Message;
+import cn.messageplus.core.message.MessageResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.NoArgsConstructor;
 @MessagePlusRequest
 @AllArgsConstructor
 @NoArgsConstructor
-public class PathResponse extends Message {
+public class PathResponse extends MessageResponse {
     public static final short type = 53;
     private Object data;
 

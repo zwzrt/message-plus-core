@@ -346,10 +346,10 @@ public class BidHashMap<K, V> implements Serializable {
      * @return 索引
      */
     protected int getIndex(int hashCode) {
-        return hashCode % maxSize;
+        return Math.abs(hashCode % maxSize);
     }
     protected int getIndex(Object o) {
-        return o.hashCode() % maxSize;
+        return Math.abs(o.hashCode() % maxSize);
     }
 
     /**
@@ -366,9 +366,9 @@ public class BidHashMap<K, V> implements Serializable {
         this.size = 0;
         // 复制旧容器
         Node<K, V>[] oldKeyNodes = this.keyNodes;
-        Node<K, V>[] keyEndNodes = this.keyEndNodes;
-        Node<K, V>[] valueNodes = this.valueNodes;
-        Node<K, V>[] valueEndNodes = this.valueEndNodes;
+//        Node<K, V>[] keyEndNodes = this.keyEndNodes;
+//        Node<K, V>[] valueNodes = this.valueNodes;
+//        Node<K, V>[] valueEndNodes = this.valueEndNodes;
         // 创建新容器
         this.keyNodes = new Node[this.maxSize];
         this.keyEndNodes = new Node[this.maxSize];

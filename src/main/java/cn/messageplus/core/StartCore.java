@@ -11,20 +11,15 @@ import cn.messageplus.core.handler.*;
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
 import cn.messageplus.core.utils.exterior.SpringUtils;
-import com.alibaba.fastjson.JSON;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -88,7 +83,6 @@ public class StartCore {
             LoginRequestHandler LOGIN_REQUEST_HANDLER = new LoginRequestHandler();
             MessageHandler MESSAGE_HANDLER = new MessageHandler();
             PathRequestHandler PATH_REQUEST_HANDLER = new PathRequestHandler();
-            AudioHandler AUDIO_HANDLER = new AudioHandler();
             try {
                 serverBootstrap.channel(NioServerSocketChannel.class);
                 serverBootstrap.group(boss, worker);
@@ -107,7 +101,6 @@ public class StartCore {
                         ch.pipeline().addLast(LOGIN_REQUEST_HANDLER);
                         ch.pipeline().addLast(MESSAGE_HANDLER);
                         ch.pipeline().addLast(PATH_REQUEST_HANDLER);
-                        ch.pipeline().addLast(AUDIO_HANDLER);
                         // 添加自定义处理器
                         for (SimpleChannelInboundHandler<?> handler : handlerList) {
                             ch.pipeline().addLast(handler);

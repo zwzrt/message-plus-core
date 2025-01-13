@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 音频响应
+ * 图片响应
  **/
 @Data
 @NoArgsConstructor
 @MessagePlusResponse
-public class AudioResponse extends MessageResponse {
-    public static final short type = 54;
+public class PictureResponse extends MessageResponse {
+    public static final short type = 5;
 
     // 切片ID
     private int sliceId;
@@ -27,7 +27,7 @@ public class AudioResponse extends MessageResponse {
     private int length;
     private List<Byte> bytes;
 
-    public AudioResponse(byte[] bytes) {
+    public PictureResponse(byte[] bytes) {
         this.bytes = new ArrayList<>();
         for (byte b : bytes) {
             this.bytes.add(b);

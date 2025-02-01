@@ -11,11 +11,11 @@ import java.util.Map;
  **/
 @Data
 public abstract class Message implements Serializable {
-    private final byte version = 1;
+    protected final byte version = 1;
     // 请求/响应头
-    private Map<String, String> headers = new HashMap<>();
-    private String fromId;
-    private String toId;
+    protected Map<String, String> headers = new HashMap<>();
+    protected String fromId;
+    protected String toId;
 
     public byte getVersion() {
         return version;

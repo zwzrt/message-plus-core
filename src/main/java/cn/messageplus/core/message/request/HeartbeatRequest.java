@@ -5,19 +5,12 @@ import cn.messageplus.core.message.request.parent.MessageRequest;
 import lombok.Data;
 
 /**
- * 聊天请求
+ * 心跳请求
  */
 @Data
 @MessagePlusRequest
-public class ChatRequest extends MessageRequest {
-    public static final short type = 1;
-    String content;
-
-    public ChatRequest() {}
-    public ChatRequest(String content) {
-        this.content = content;
-    }
-
+public class HeartbeatRequest extends MessageRequest {
+    public static final short type = 0;
     @Override
     public short getType() {
         return type;

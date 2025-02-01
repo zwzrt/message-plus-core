@@ -1,7 +1,6 @@
 package cn.messageplus.core.session;
 
-import cn.messageplus.core.message.Message;
-import cn.messageplus.core.message.MessageResponse;
+import cn.messageplus.core.message.response.parent.MessageResponse;
 import cn.messageplus.core.utils.BidHashMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -22,7 +21,9 @@ public class SessionManage {
 
 
     public static void join(String uid, Channel channel) {
+        uidChannelMap.removeByKey(uid);
         uidChannelMap.put(uid, channel);
+        uidBufferMap.removeByKey(uid);
         uidBufferMap.put(uid, channel.alloc().buffer());
     }
 

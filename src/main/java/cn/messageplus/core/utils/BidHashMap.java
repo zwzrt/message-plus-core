@@ -123,7 +123,7 @@ public class BidHashMap<K, V> implements Serializable {
      * @param key 键
      * @return 返回值
      */
-    public V remove(K key) {
+    public V removeByKey(K key) {
         // 1.查询值
         V value = this.getV(key);
         if (value == null) return null;

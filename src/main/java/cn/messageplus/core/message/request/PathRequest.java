@@ -2,6 +2,7 @@ package cn.messageplus.core.message.request;
 
 import cn.messageplus.core.annotation.MessagePlusRequest;
 import cn.messageplus.core.message.Message;
+import cn.messageplus.core.message.request.parent.MessageRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @MessagePlusRequest
 @AllArgsConstructor
 @NoArgsConstructor
-public class PathRequest extends Message {
+public class PathRequest extends MessageRequest {
     public static final short type = 3;
     // 请求路径
     String path;

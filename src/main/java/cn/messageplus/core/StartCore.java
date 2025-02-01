@@ -12,9 +12,7 @@ import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
 import cn.messageplus.core.utils.exterior.SpringUtils;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -80,7 +78,7 @@ public class StartCore {
 
             // 5.启动网络服务
             ExceptionHandler EXCEPTION_HANDLER = new ExceptionHandler();
-            LoginRequestHandler LOGIN_REQUEST_HANDLER = new LoginRequestHandler();
+//            LoginRequestHandler LOGIN_REQUEST_HANDLER = new LoginRequestHandler();
             MessageHandler MESSAGE_HANDLER = new MessageHandler();
             PathRequestHandler PATH_REQUEST_HANDLER = new PathRequestHandler();
             try {
@@ -98,13 +96,18 @@ public class StartCore {
                                 configureByWEBSOCKET(ch);
                                 break;
                         }
-                        ch.pipeline().addLast(LOGIN_REQUEST_HANDLER);
+//                        ch.pipeline().addLast(LOGIN_REQUEST_HANDLER);
                         ch.pipeline().addLast(MESSAGE_HANDLER);
                         ch.pipeline().addLast(PATH_REQUEST_HANDLER);
                         // 添加自定义处理器
                         for (SimpleChannelInboundHandler<?> handler : handlerList) {
                             ch.pipeline().addLast(handler);
                         }
+                    }
+                    @Override
+                    protected Object clone() throws CloneNotSupportedException {
+                        log.warn("关闭链接");
+                        return super.clone();
                     }
                 });
                 ChannelFuture channelFuture = serverBootstrap.bind(8080).sync();

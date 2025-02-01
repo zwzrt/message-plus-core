@@ -17,6 +17,8 @@ public class ExceptionHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (cause instanceof SocketException) {
             log.warn("有客户端异常断开", cause);
+        } else {
+            log.warn(cause.getMessage());
         }
     }
 }

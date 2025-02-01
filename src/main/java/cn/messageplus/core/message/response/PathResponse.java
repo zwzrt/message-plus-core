@@ -1,7 +1,7 @@
 package cn.messageplus.core.message.response;
 
 import cn.messageplus.core.annotation.MessagePlusRequest;
-import cn.messageplus.core.message.MessageResponse;
+import cn.messageplus.core.message.response.parent.MessageResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

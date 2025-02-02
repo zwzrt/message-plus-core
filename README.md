@@ -32,7 +32,7 @@
 
 ## 软件架构
 
-Maven + SpringBoot + Hutool + Netty
+Maven + SpringBoot + Hutool + Netty + SaToken
 
 ## 通信协议
 

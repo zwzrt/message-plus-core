@@ -23,6 +23,7 @@ public abstract class Message implements Serializable {
 
     /**
      * 自定义请求类型字节码需要大于等于100
+     * @return 类型编码
      */
     public abstract short getType();
 }

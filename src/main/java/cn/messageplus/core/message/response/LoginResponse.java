@@ -6,8 +6,7 @@ import lombok.Data;
 
 /**
  * @deprecated 
- * @author mo
- * @日期: 2024-12-07 14:50
+ * 登录响应
  **/
 @Deprecated
 @Data

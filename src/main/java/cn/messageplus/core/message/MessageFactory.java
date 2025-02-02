@@ -18,18 +18,22 @@ public class MessageFactory {
 
     /**
      * 添加请求类型
+     * @param type 请求类型
+     * @param messageClass 请求类型对应的类
      */
     public static void addMessageType(short type, Class<? extends Message> messageClass) {
         messageClasses.put(type, messageClass);
     }
     /**
      * 添加请求类型
+     * @param messageType 请求类型
      */
     public static void addMessageType(Message messageType) {
         messageClasses.put(messageType.getType(), messageType.getClass());
     }
     /**
      * 添加请求类型
+     * @param messageType 请求类型链表
      */
     public static void addMessageTypes(List<Message> messageType) {
         for (Message requestType : messageType) {

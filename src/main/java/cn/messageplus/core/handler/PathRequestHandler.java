@@ -11,8 +11,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.lang.reflect.Method;
 
 /**
- * @author mo
- * @日期: 2024-12-05 22:51
+ * 路径请求处理器
  **/
 @ChannelHandler.Sharable
 public class PathRequestHandler extends SimpleChannelInboundHandler<PathRequest> {

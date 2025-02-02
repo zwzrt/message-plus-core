@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @deprecated
- * @author mo
- * @日期: 2024-12-03 23:23
+ * 登录请求
  **/
 @Deprecated
 @Data

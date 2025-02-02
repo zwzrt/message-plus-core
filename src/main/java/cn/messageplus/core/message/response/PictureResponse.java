@@ -2,6 +2,7 @@ package cn.messageplus.core.message.response;
 
 import cn.messageplus.core.annotation.MessagePlusResponse;
 import cn.messageplus.core.message.response.parent.MessageResponse;
+import cn.messageplus.core.message.response.parent.MessageSliceResponse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,18 +15,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @MessagePlusResponse
-public class PictureResponse extends MessageResponse {
-    public static final short type = 5;
-
-    // 切片ID
-    private int sliceId;
-    // 切片总数
-    private int sliceNum;
-    // 当前切片索引
-    private int currentIndex;
-    // 实际长度
-    private int length;
-    private List<Byte> bytes;
+public class PictureResponse extends MessageSliceResponse {
+    public static final short type = 55;
 
     public PictureResponse(byte[] bytes) {
         this.bytes = new ArrayList<>();

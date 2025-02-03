@@ -1,6 +1,7 @@
 package cn.messageplus.core.utils.exterior;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Repository;
@@ -67,8 +68,13 @@ public class SpringUtils implements BeanFactoryPostProcessor {
      * @throws BeansException 如果出现异常
      */
     public static <T> T getBean(Class<T> clz) throws BeansException {
-        T result = (T) getBeanFactory().getBean(clz);
-        return result;
+        try {
+            T result = (T) getBeanFactory().getBean(clz);
+            return result;
+        } catch (NoSuchBeanDefinitionException e) {
+            return null;
+        }
+
     }
 
     public static List<Object> getBeansWithAnnotation(Class<? extends Annotation> anno) {

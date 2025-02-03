@@ -29,7 +29,7 @@ public class Group {
     /**
      * 是否开启禁言
      */
-    private Boolean isForbiddenSpeak;
+    private Boolean isForbiddenSpeak = false;
 
     /**
      * 创建群组

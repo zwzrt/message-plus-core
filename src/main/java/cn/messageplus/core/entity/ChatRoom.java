@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 聊天室
@@ -42,7 +43,7 @@ public class ChatRoom implements Serializable {
     /**
      * 用户ID列表
      */
-    private Map<String, Integer> clientIdMap = new HashMap<>();
+    private Map<String, Integer> clientIdMap = new ConcurrentHashMap<>();
     /**
      * 点赞数量
      */
@@ -58,32 +59,29 @@ public class ChatRoom implements Serializable {
     /**
      * 是否开启禁言
      */
-    private Boolean isForbiddenSpeak;
+    private Boolean isForbiddenSpeak = false;
 
-    {
+    /**
+     * 创建聊天室
+     * @param createUserId 创建者ID
+     * @param chatRoomName 聊天室名称
+     */
+    public ChatRoom(String createUserId, String chatRoomName) {
         this.id = SnowflakeIDUtil.getID();
-    }
-
-    public ChatRoom(String id, String createUserId, String name) {
-        this.id = id;
         this.createUserId = createUserId;
-        this.name = name;
+        this.name = chatRoomName;
     }
-
 
     /**
      * 创建聊天室
      * @param id 聊天室ID
      * @param createUserId 创建者ID
      * @param chatRoomName 聊天室名称
-     * @return 聊天室
      */
-    public static ChatRoom BuildChatRoom(String id, String createUserId, String chatRoomName) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.id = id;
-        chatRoom.createUserId = createUserId;
-        chatRoom.name = chatRoomName;
-        return chatRoom;
+    public ChatRoom(String id, String createUserId, String chatRoomName) {
+        this.id = id;
+        this.createUserId = createUserId;
+        this.name = chatRoomName;
     }
 
     /**

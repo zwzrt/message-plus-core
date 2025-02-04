@@ -14,6 +14,7 @@ import cn.messageplus.core.implement.SelectChatRoomInterface;
 import cn.messageplus.core.implement.SelectGroupInterface;
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
+import cn.messageplus.core.session.SessionManage;
 import cn.messageplus.core.util.MpcUtil;
 import cn.messageplus.core.utils.exterior.SpringUtils;
 import io.netty.bootstrap.ServerBootstrap;
@@ -86,12 +87,12 @@ public class StartCore {
             SelectGroupInterface sgi = SpringUtils.getBean(SelectGroupInterface.class);
             if (sgi != null) {
                 List<Group> select = sgi.select();
-                MpcUtil.settingGroups(select);
+                SessionManage.settingGroups(select);
             }
             SelectChatRoomInterface sci = SpringUtils.getBean(SelectChatRoomInterface.class);
             if (sci != null) {
                 List<ChatRoom> select = sci.select();
-                MpcUtil.settingChatRoom(select);
+                SessionManage.settingChatRoom(select);
             }
 
             // 6.启动网络服务

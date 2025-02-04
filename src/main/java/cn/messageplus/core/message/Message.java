@@ -14,7 +14,14 @@ public abstract class Message implements Serializable {
     protected final byte version = 1;
     // 请求/响应头
     protected Map<String, String> headers = new HashMap<>();
+    // 发送方ID
     protected String fromId;
+    // 接收方类型
+    // 个人 - 1
+    // 群聊 - 3
+    // 聊天室 - 5
+    protected short toType;
+    // 接收方ID
     protected String toId;
 
     public byte getVersion() {

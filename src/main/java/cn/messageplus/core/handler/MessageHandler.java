@@ -1,6 +1,5 @@
 package cn.messageplus.core.handler;
 
-import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.response.LoginResponse;
@@ -19,7 +18,9 @@ public class MessageHandler extends SimpleChannelInboundHandler<Message> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message message) throws Exception {
         // 不为空说明已登录，放行
-        if (SessionManage.getUid(channelHandlerContext.channel()) != null) {
+        String suid = SessionManage.getUid(channelHandlerContext.channel());
+        if (suid != null) {
+            message.setFromId(suid);
             // 放行
             channelHandlerContext.fireChannelRead(message);
         }
@@ -32,6 +33,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<Message> {
                 String uid = (String) id;
                 // 加入会话管理
                 SessionManage.join(uid, channelHandlerContext.channel());
+                message.setFromId(uid);
                 // 放行
                 channelHandlerContext.fireChannelRead(message);
             } else {

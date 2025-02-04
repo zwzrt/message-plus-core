@@ -13,6 +13,7 @@ import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ public class BinaryWebSocketCodec extends MessageToMessageCodec<BinaryWebSocketF
 
         Class<? extends Message> requestType = MessageFactory.getMessageType(type);
 
-        Message messageRequest = JSON.parseObject(new String(bytes), MessageFactory.getMessageType(type));
+        Message messageRequest = JSON.parseObject(new String(bytes, StandardCharsets.UTF_8), MessageFactory.getMessageType(type));
 
         if (requestType.getSuperclass() == MessageSliceRequest.class) {
             MessageSliceRequest request = (MessageSliceRequest) messageRequest;

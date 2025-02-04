@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PathResponse extends MessageResponse {
     public static final short type = 53;
+    private String path;
     private Object data;
 
     @Override

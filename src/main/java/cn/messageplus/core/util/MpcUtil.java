@@ -2,59 +2,80 @@ package cn.messageplus.core.util;
 
 import cn.messageplus.core.entity.ChatRoom;
 import cn.messageplus.core.entity.Group;
+import cn.messageplus.core.manage.ChatRoomManage;
+import cn.messageplus.core.manage.GroupManage;
+import cn.messageplus.core.manage.SessionManage;
+import cn.messageplus.core.message.response.parent.MessageResponse;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * 供开发人员调用的工具类
  */
 public class MpcUtil {
-    protected static Map<String, Group> groupMap = new ConcurrentHashMap<>();
-    protected static Map<String, ChatRoom> chatRoomMap = new ConcurrentHashMap<>();
+    protected static final ThreadLocal<String> userId = new ThreadLocal<>();
 
-    /**
-     * 设置群组信息
-     * @param groupList 群组列表
-     */
-    public static void settingGroups(List<Group> groupList) {
-        Map<String, Group> collect = groupList.stream().collect(Collectors.toMap(Group::getId, e->e, (v1,v2)->v1));
-        groupMap = new ConcurrentHashMap<>(collect);
+
+    public static void setUserId(String userId) {
+        MpcUtil.userId.set(userId);
+    }
+
+    public static String getUserId() {
+        return userId.get();
     }
 
     /**
-     * 设置聊天室信息
-     * @param chatRoomList 聊天室列表
+     * 发送响应
+     * @param response 响应
      */
-    public static void settingChatRoom(List<ChatRoom> chatRoomList) {
-        Map<String, ChatRoom> collect = chatRoomList.stream().collect(Collectors.toMap(ChatRoom::getId, e->e, (v1,v2)->v1));
-        chatRoomMap = new ConcurrentHashMap<>(collect);
+    public static void send(MessageResponse response) {
+        SessionManage.send(response);
     }
 
     /**
-     * 获取群组map
+     * 发送响应
+     * @param response 响应
      */
-    public static Map<String, Group> getGroupMap() {
-        return groupMap;
+    public static void sendByUser(MessageResponse response) {
+        SessionManage.sendByUser(response);
     }
+
+    /**
+     * 发送响应
+     * @param toId 用户ID
+     * @param response 响应
+     */
+    public static void sendByUser(String toId, MessageResponse response) {
+        SessionManage.sendByUser(toId, response);
+    }
+
+    /**
+     * 发送群组响应
+     * @param response 响应
+     */
+    public static void sendByGroup(MessageResponse response) {
+        SessionManage.sendByGroup(response);
+    }
+
+    /**
+     *
+     */
+    public static int joinChatRoom(String chatRoomId) {
+        return ChatRoomManage.join(chatRoomId, MpcUtil.getUserId());
+    }
+
     /**
      * 获取群组list
      */
     public static List<Group> getGroupList() {
-        return new ArrayList<>(groupMap.values());
+        return GroupManage.getGroupList();
     }
-    /**
-     * 获取聊天室map
-     */
-    public static Map<String, ChatRoom> getChatRoomMap() {
-        return chatRoomMap;
-    }
+
     /**
      * 获取聊天室list
      */
     public static List<ChatRoom> getChatRoomList() {
-        return new ArrayList<>(chatRoomMap.values());
+        return ChatRoomManage.getChatRoomList();
     }
 
 }

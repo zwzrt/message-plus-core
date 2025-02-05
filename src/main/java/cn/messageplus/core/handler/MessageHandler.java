@@ -2,8 +2,9 @@ package cn.messageplus.core.handler;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.messageplus.core.message.Message;
-import cn.messageplus.core.message.response.LoginResponse;
-import cn.messageplus.core.session.SessionManage;
+import cn.messageplus.core.manage.SessionManage;
+import cn.messageplus.core.message.response.ErrorResponse;
+import cn.messageplus.core.util.MpcUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -20,6 +21,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<Message> {
         // 不为空说明已登录，放行
         String suid = SessionManage.getUid(channelHandlerContext.channel());
         if (suid != null) {
+            MpcUtil.setUserId(suid);
             message.setFromId(suid);
             // 放行
             channelHandlerContext.fireChannelRead(message);
@@ -33,26 +35,15 @@ public class MessageHandler extends SimpleChannelInboundHandler<Message> {
                 String uid = (String) id;
                 // 加入会话管理
                 SessionManage.join(uid, channelHandlerContext.channel());
+                MpcUtil.setUserId(suid);
                 message.setFromId(uid);
                 // 放行
                 channelHandlerContext.fireChannelRead(message);
             } else {
                 // 为空，说明未登录
                 // 响应未登录
-                channelHandlerContext.writeAndFlush(new LoginResponse(false));
+                channelHandlerContext.writeAndFlush(new ErrorResponse("Not logged in!"));
             }
-//            try {
-//                // 获取UID
-//                String uid = StpUtil.getLoginIdAsString();
-//                // 加入会话管理
-//                SessionManage.join(uid, channelHandlerContext.channel());
-//                // 放行
-//                channelHandlerContext.fireChannelRead(message);
-//            } catch (NotLoginException e) {
-//                // 抛出异常，说明未登录
-//                // 响应未登录
-//                channelHandlerContext.writeAndFlush(new LoginResponse(false));
-//            }
         }
     }
 

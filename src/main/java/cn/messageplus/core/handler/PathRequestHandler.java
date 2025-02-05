@@ -30,7 +30,9 @@ public class PathRequestHandler extends SimpleChannelInboundHandler<PathRequest>
         // 4.执行对应方法
         Object invoke = method.invoke(mapping, request.getArgs());
         if (invoke != null) {
-            channelHandlerContext.writeAndFlush(new PathResponse(path, invoke));
+            PathResponse pathResponse = new PathResponse(path, invoke);
+            pathResponse.setId(request.getId());
+            channelHandlerContext.writeAndFlush(pathResponse);
         }
     }
 }

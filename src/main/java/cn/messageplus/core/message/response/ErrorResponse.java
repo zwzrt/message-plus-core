@@ -5,16 +5,16 @@ import cn.messageplus.core.message.response.parent.MessageResponse;
 import lombok.Data;
 
 /**
- * 聊天响应
+ * 错误响应
  */
 @Data
 @MessagePlusRequest
-public class ChatResponse extends MessageResponse {
-    public static final short type = 51;
+public class ErrorResponse extends MessageResponse {
+    public static final short type = 99;
     String content;
 
-    public ChatResponse() {}
-    public ChatResponse(String content) {
+    public ErrorResponse() {}
+    public ErrorResponse(String content) {
         this.content = content;
     }
 

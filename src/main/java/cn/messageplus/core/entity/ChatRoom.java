@@ -6,9 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 聊天室
@@ -99,10 +102,10 @@ public class ChatRoom implements Serializable {
         if (i==null) {
             // 加入聊天室
             clientIdMap.put(userId, 1);
+            // 设置最大人数
+            this.maxUserNum = clientIdMap.size()>this.maxUserNum?clientIdMap.size():this.maxUserNum;
         }
 
-        // 设置最大人数
-        this.maxUserNum = clientIdMap.size()>this.maxUserNum?clientIdMap.size():this.maxUserNum;
         return clientIdMap.size();
     }
 
@@ -117,6 +120,11 @@ public class ChatRoom implements Serializable {
         clientIdMap.remove(userId);
 
         return clientIdMap.size();
+    }
+
+
+    public List<String> getClientIdList() {
+        return new ArrayList<>(clientIdMap.keySet());
     }
 
 }

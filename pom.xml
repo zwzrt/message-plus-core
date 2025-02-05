@@ -6,7 +6,7 @@
 
     <groupId>io.github.zwzrt</groupId>
     <artifactId>message-plus-core</artifactId>
-    <version>1.0.0-beta</version>
+    <version>1.0.1-beta</version>
     <name>message-plus-core</name>
     <description>message-plus-core</description>
     <url>https://www.red-coral.cn</url>

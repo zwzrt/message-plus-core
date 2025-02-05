@@ -12,10 +12,11 @@ import cn.messageplus.core.entity.Group;
 import cn.messageplus.core.handler.*;
 import cn.messageplus.core.implement.SelectChatRoomInterface;
 import cn.messageplus.core.implement.SelectGroupInterface;
+import cn.messageplus.core.manage.ChatRoomManage;
+import cn.messageplus.core.manage.GroupManage;
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
-import cn.messageplus.core.session.SessionManage;
-import cn.messageplus.core.util.MpcUtil;
+import cn.messageplus.core.manage.SessionManage;
 import cn.messageplus.core.utils.exterior.SpringUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -26,7 +27,6 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.context.annotation.Configuration;
 
 import java.lang.reflect.Method;
@@ -87,12 +87,12 @@ public class StartCore {
             SelectGroupInterface sgi = SpringUtils.getBean(SelectGroupInterface.class);
             if (sgi != null) {
                 List<Group> select = sgi.select();
-                SessionManage.settingGroups(select);
+                GroupManage.settingGroups(select);
             }
             SelectChatRoomInterface sci = SpringUtils.getBean(SelectChatRoomInterface.class);
             if (sci != null) {
                 List<ChatRoom> select = sci.select();
-                SessionManage.settingChatRoom(select);
+                ChatRoomManage.settingChatRoom(select);
             }
 
             // 6.启动网络服务

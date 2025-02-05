@@ -14,6 +14,8 @@ public abstract class Message implements Serializable {
     protected final byte version = 1;
     // 请求/响应头
     protected Map<String, String> headers = new HashMap<>();
+    // 请求ID
+    protected String id;
     // 发送方ID
     protected String fromId;
     // 接收方类型

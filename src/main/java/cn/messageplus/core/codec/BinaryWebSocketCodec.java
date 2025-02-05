@@ -2,12 +2,9 @@ package cn.messageplus.core.codec;
 
 import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
-import cn.messageplus.core.message.request.AudioRequest;
 import cn.messageplus.core.message.request.parent.MessageSliceRequest;
-import cn.messageplus.core.session.SessionManage;
 import com.alibaba.fastjson.JSON;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;

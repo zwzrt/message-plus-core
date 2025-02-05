@@ -1,8 +1,6 @@
 package cn.messageplus.core.message;
 
-import cn.messageplus.core.message.request.LoginRequest;
 import cn.messageplus.core.message.request.PathRequest;
-import cn.messageplus.core.message.response.LoginResponse;
 import cn.messageplus.core.message.response.PathResponse;
 
 import java.util.HashMap;
@@ -50,10 +48,8 @@ public class MessageFactory {
      */
     public static void clientStaticInit() {
         MessageFactory.addMessageType(PathRequest.type, PathRequest.class);
-        MessageFactory.addMessageType(LoginRequest.type, LoginRequest.class);
 
         MessageFactory.addMessageType(PathResponse.type, PathResponse.class);
-        MessageFactory.addMessageType(LoginResponse.type, LoginResponse.class);
     }
 
 }

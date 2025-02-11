@@ -4,6 +4,7 @@ import cn.messageplus.core.message.Message;
 import cn.messageplus.core.message.MessageFactory;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -15,6 +16,7 @@ import java.util.List;
  * WebSocket字符串编码器
  **/
 @Slf4j
+@ChannelHandler.Sharable
 public class TextWebSocketCodec extends MessageToMessageCodec<TextWebSocketFrame, Message> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Message msg, List<Object> out) throws Exception {
